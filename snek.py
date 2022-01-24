@@ -5,9 +5,10 @@ class Snek():
         self.length = 1
         self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
-        self.bodyColor = (50, 243, 255)
-        self.borderColor = (50, 243, 255)
+        self.bodyColor = (50, 243, 250)
+        self.borderColor = (55, 247, 255)
         self.score = 0
+        self.highScore = 0
 
     def get_head_position(self):
         return self.positions[0]
@@ -29,10 +30,12 @@ class Snek():
             if len(self.positions) > self.length:
                 self.positions.pop()
 
-    def reset(self):
+    def reset(self):   # snek die
         self.length = 1
         self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
+        if self.score > self.highScore:
+            self.highScore = self.score
         self.score = 0
 
     def draw(self, surface):
@@ -59,8 +62,8 @@ class Snek():
 class Food():
     def __init__(self):
         self.position = (0, 0)
-        self.bodyColor = (230, 38, 255)
-        self.borderColor = (255, 77, 255)
+        self.bodyColor = (230, 38, 250)
+        self.borderColor = (235, 43, 255)
         self.randomize_position()
 
     def randomize_position(self):
@@ -77,9 +80,11 @@ def drawGrid(surface):
             if (x + y) % 2 == 0:
                 r = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (10, 10, 10), r)
+                pygame.draw.rect(surface, (15, 15, 15), r, 1)
             else:
                 rr = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (10, 10, 10), rr)
+                pygame.draw.rect(surface, (15, 15, 15), rr, 1)
 
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768
@@ -106,9 +111,14 @@ def main():
 
     snek = Snek()
     food = Food()
-    score = snek.score
     
-    myfont = pygame.font.SysFont("monospace",16)
+    fontSize = 18
+    scoreFont = pygame.font.SysFont("monospace", fontSize)
+    scoreColor = (255, 255, 255)
+    scoreMarginLeft = 5
+    highScoreMarginTop = 10
+    scoreMarginTop = fontSize + (highScoreMarginTop * 2)
+
     while (True):
         clock.tick(10)
         snek.handle_keys()
@@ -116,13 +126,19 @@ def main():
         snek.move()
         if snek.get_head_position() == food.position:
             snek.length += 1
-            score += 1
+            snek.score += 1
             food.randomize_position()
         snek.draw(surface)
         food.draw(surface)
         screen.blit(surface, (0, 0))
-        text = myfont.render("Score {0}".format(score), 1, (255, 255, 255))
-        screen.blit(text, (5, 10))
+
+        # scoreboard
+        score = scoreFont.render("Score {0}".format(snek.score), 1, scoreColor)
+        highScore = scoreFont.render("High Score {0}".format(snek.highScore), 1, scoreColor)
+        screen.blit(highScore, (scoreMarginLeft, highScoreMarginTop))
+        screen.blit(score, (scoreMarginLeft, scoreMarginTop))
+
+
         pygame.display.update()
 
 main()
