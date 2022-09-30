@@ -18,7 +18,7 @@ class Snek():
             return
         else:
             self.direction = point
-    
+
     def move(self):
         cur = self.get_head_position()
         x, y = self.direction
@@ -50,13 +50,13 @@ class Snek():
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.turn(UP) # all da way
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     self.turn(DOWN) # for what?
-                elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     self.turn(LEFT)
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     self.turn(RIGHT)
 
 class Food():
@@ -111,7 +111,7 @@ def main():
 
     snek = Snek()
     food = Food()
-    
+
     fontSize = 18
     scoreFont = pygame.font.SysFont("monospace", fontSize)
     scoreColor = (255, 255, 255)
