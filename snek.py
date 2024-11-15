@@ -1,6 +1,22 @@
-import pygame, sys, random
+import random
+import sys
 
-class Snek():
+import pygame
+
+SCREEN_WIDTH = 768
+SCREEN_HEIGHT = 768
+
+GRIDSIZE = 32
+GRID_WIDTH = int(SCREEN_HEIGHT / GRIDSIZE)
+GRID_HEIGHT = int(SCREEN_WIDTH / GRIDSIZE)
+
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+
+
+class Snek:
     def __init__(self):
         self.length = 1
         self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
@@ -22,7 +38,10 @@ class Snek():
     def move(self):
         cur = self.get_head_position()
         x, y = self.direction
-        new = (((cur[0] + (x*GRIDSIZE)) % SCREEN_WIDTH), (cur[1] + (y*GRIDSIZE)) % SCREEN_HEIGHT)
+        new = (
+            ((cur[0] + (x * GRIDSIZE)) % SCREEN_WIDTH),
+            (cur[1] + (y * GRIDSIZE)) % SCREEN_HEIGHT,
+        )
         if len(self.positions) > 2 and new in self.positions[2:]:
             self.reset()
         else:
@@ -30,7 +49,7 @@ class Snek():
             if len(self.positions) > self.length:
                 self.positions.pop()
 
-    def reset(self):   # snek die
+    def reset(self):  # snek die
         self.length = 1
         self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
@@ -51,15 +70,16 @@ class Snek():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
-                    self.turn(UP) # all da way
+                    self.turn(UP)  # all da way
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    self.turn(DOWN) # for what?
+                    self.turn(DOWN)  # for what?
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     self.turn(LEFT)
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     self.turn(RIGHT)
 
-class Food():
+
+class Food:
     def __init__(self):
         self.position = (0, 0)
         self.bodyColor = (230, 38, 250)
@@ -67,43 +87,36 @@ class Food():
         self.randomize_position()
 
     def randomize_position(self):
-        self.position = (random.randint(0, GRID_WIDTH-1) * GRIDSIZE, random.randint(0, GRID_HEIGHT-1) * GRIDSIZE)
+        self.position = (
+            random.randint(0, GRID_WIDTH - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
 
     def draw(self, surface):
         r = pygame.Rect((self.position[0], self.position[1]), (GRIDSIZE, GRIDSIZE))
         pygame.draw.rect(surface, self.bodyColor, r)
         pygame.draw.rect(surface, self.borderColor, r, 1)
 
+
 def drawGrid(surface):
     for y in range(0, int(GRID_HEIGHT)):
         for x in range(0, int(GRID_WIDTH)):
             if (x + y) % 2 == 0:
-                r = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                r = pygame.Rect((x * GRIDSIZE, y * GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (10, 10, 10), r)
                 pygame.draw.rect(surface, (15, 15, 15), r, 1)
             else:
-                rr = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                rr = pygame.Rect((x * GRIDSIZE, y * GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (10, 10, 10), rr)
                 pygame.draw.rect(surface, (15, 15, 15), rr, 1)
 
-SCREEN_WIDTH = 768
-SCREEN_HEIGHT = 768
-
-GRIDSIZE = 32
-GRID_WIDTH = SCREEN_HEIGHT / GRIDSIZE
-GRID_HEIGHT = SCREEN_WIDTH / GRIDSIZE
-
-UP = (0, -1)
-DOWN = (0, 1)
-LEFT = (-1, 0)
-RIGHT = (1, 0)
 
 def main():
     pygame.init()
 
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption('snek')
+    pygame.display.set_caption("snek")
 
     surface = pygame.Surface(screen.get_size())
     surface = surface.convert()
@@ -119,7 +132,7 @@ def main():
     highScoreMarginTop = 10
     scoreMarginTop = fontSize + (highScoreMarginTop * 2)
 
-    while (True):
+    while True:
         clock.tick(10)
         snek.handle_keys()
         drawGrid(surface)
@@ -134,11 +147,13 @@ def main():
 
         # scoreboard
         score = scoreFont.render("Score {0}".format(snek.score), 1, scoreColor)
-        highScore = scoreFont.render("High Score {0}".format(snek.highScore), 1, scoreColor)
+        highScore = scoreFont.render(
+            "High Score {0}".format(snek.highScore), 1, scoreColor
+        )
         screen.blit(highScore, (scoreMarginLeft, highScoreMarginTop))
         screen.blit(score, (scoreMarginLeft, scoreMarginTop))
 
-
         pygame.display.update()
+
 
 main()
