@@ -69,13 +69,29 @@ class Snek:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                if (
+                    event.key == pygame.K_UP
+                    or event.key == pygame.K_w
+                    or event.key == pygame.K_k
+                ):
                     self.turn(UP)  # all da way
-                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                elif (
+                    event.key == pygame.K_DOWN
+                    or event.key == pygame.K_s
+                    or event.key == pygame.K_j
+                ):
                     self.turn(DOWN)  # for what?
-                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                elif (
+                    event.key == pygame.K_LEFT
+                    or event.key == pygame.K_a
+                    or event.key == pygame.K_h
+                ):
                     self.turn(LEFT)
-                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                elif (
+                    event.key == pygame.K_RIGHT
+                    or event.key == pygame.K_d
+                    or event.key == pygame.K_l
+                ):
                     self.turn(RIGHT)
 
 
